@@ -19,9 +19,18 @@ func sayHello(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	// start the tracer with zero or more options
-	tracer.Start(tracer.WithDebugMode(true))
-	defer tracer.Stop()
+	// curl IP for ECS to set DD_TRACE_AGENT_PORT
+	resp, err :=http.Get("http://169.254.169.254/latest/meta-data/local-ipv4")
+    if err == nil {
+        addr := net.JoinHostPort(
+        resp,
+        8126,
+        )
+        os.Setenv("DD_AGENT_HOST", addr)
+        tracer.Start(tracer.WithAgentAddr(addr))
+		tracer.Start(tracer.WithDebugMode(true))
+
+        defer tracer.Stop()
 
 	mux := httptrace.NewServeMux() // init the http tracer
 	mux.HandleFunc("/", sayHello)  // use the tracer to handle the urls
