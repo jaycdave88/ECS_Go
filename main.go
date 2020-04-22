@@ -8,6 +8,7 @@ import (
     "io/ioutil"
     "strings"
 
+
     httptrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/net/http"
 	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 )
@@ -21,17 +22,16 @@ func sayHello(w http.ResponseWriter, r *http.Request) {
 
 func main() {
     	// curl IP for ECS to set DD_TRACE_AGENT_PORT
-        port := "8126"
     	resp, err := http.Get("http://169.254.169.254/latest/meta-data/local-ipv4")
         bodyBytes, err := ioutil.ReadAll(resp.Body)
-        if err != nil {
-            log.Fatal(err)
-        }
+
         host := string(bodyBytes)
-    if err == nil {
-        addr := net.JoinHostPort(host, port)
-        os.Setenv("DD_AGENT_HOST", addr)
-        tracer.Start(tracer.WithAgentAddr(addr))
+        os.Stderr.WriteString(host)
+
+   if err == nil {
+        //addr := net.JoinHostPort(host, port)
+        os.Setenv("DD_AGENT_HOST", host)
+        tracer.Start(tracer.WithAgentAddr(host))
         tracer.Start(tracer.WithDebugMode(true))
         tracer.Start(tracer.WithAnalytics(true))
 
@@ -44,5 +44,5 @@ func main() {
         if err != nil{
             log.Fatal("ListenAndServe: ", err)
         }
-    }    
+   }    
 }
