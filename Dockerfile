@@ -6,5 +6,5 @@ RUN go get "golang.org/x/xerrors"
 RUN go get "golang.org/x/time/rate"
 COPY . .
 RUN go build -o main .
-WORKDIR /app
-CMD ["go run main.go"]
+RUN chmod +x main
+CMD ["./main"]
