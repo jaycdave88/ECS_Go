@@ -33,6 +33,7 @@ func main() {
         os.Setenv("DD_AGENT_HOST", addr)
         tracer.Start(tracer.WithAgentAddr(addr))
         tracer.Start(tracer.WithDebugMode(true))
+        tracer.Start(tracer.WithAnalytics(true))
 
         defer tracer.Stop()
 
