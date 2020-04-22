@@ -7,4 +7,5 @@ RUN go get "golang.org/x/time/rate"
 COPY . .
 RUN go build -o main .
 RUN chmod +x main
+EXPOSE 9090
 CMD ["./main"]
